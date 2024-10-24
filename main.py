@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 import random
 
@@ -17,7 +18,7 @@ app = FastAPI()
 
 
 #Our to-do items list:
-itemsList = ["APPLE", "SODA"]
+itemsList = []
 
 
 @app.get("/")
@@ -66,7 +67,26 @@ def get_item(index: int) -> str:
         # where you can find the standard that meets the criteria which will result in error
 
 
+# Lesson 3: JSON Requests
+# Whenever we want to use more complex data structures, instead of just the typical data types, we can pass in JSON formats instead
+# So to do this, we can use "Pydantic" models, which allows you to structure your data into more complex ones (being the json format) and also provide additional validation (shows any errors in terminals if not passed in correctly
 
+# class <Name> (Basemodel):
+    # <Variable x >: <DataType> = <Default Value>
+    # etc...
+
+#Note: Default values are optional, if you dont have one, it is required to pass in a variable or else it will pronounce an error in terminal (being the validation we just talked about)
+class ItemObjectName(BaseModel): #You can make any name for the model, i put "ItemObjectName" as an example.
+    item_title: str #Necessary to pass value
+    check_mark: bool = False #Optional to pass value, and if not, put to False
+
+#When you use a modeled object as part of an agrument within an api, its gong to expect that to be in the JSON payload of the request
+@app.post("/myPostPathObject")
+def create_object(item: ItemObjectName):
+    itemsList.append(item)
+    return itemsList
+# To send an 'ItemObjectName' data, we need to send the following way in the terminal:
+# curl -X POST -H "Content-Type: application/json" -d '{"item_title":"x"}' http://127.0.0.1:8000/myPostPathObject
 
 
 
