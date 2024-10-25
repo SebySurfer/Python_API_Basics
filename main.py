@@ -67,7 +67,7 @@ def get_item(index: int) -> str:
         # where you can find the standard that meets the criteria which will result in error
 
 
-# Lesson 3: JSON Requests
+# Lesson 3: Making models: JSON Requests
 # Whenever we want to use more complex data structures, instead of just the typical data types, we can pass in JSON formats instead
 # So to do this, we can use "Pydantic" models, which allows you to structure your data into more complex ones (being the json format) and also provide additional validation (shows any errors in terminals if not passed in correctly
 
@@ -90,3 +90,43 @@ def create_object(item: ItemObjectName):
 
 
 
+# Lesson 4: Response models
+# For every api, at times we have a function and return a model.
+# Sometimes, we want the response (being the return) to be different from the whole model, because:
+    # how it'll be used in our front end
+    # We only need some parts of data from the model
+    # We dont want it to pass sensitive data
+    # We dont want it to pass unecessary data
+    # etc
+
+# How can we make this modification to our model, without having to change it ? "Response Models"
+
+# You can return a complex or nested data strusture from your funtion,, and FastAPI will reshape it to match the response_model
+    # Note: You dont strictly have to use the SAME model, as said, we can create personalized models to be returned
+# Using response_model allows you to keep your API responses consistent regardless of how the function’s internal data may evolve.
+
+# Example:
+# Suppose you add a sensitive field (e.g., password, internal_id) to the model or return dictionary
+# for internal logic; the response_model will ensure that only the intended fields are visible to the client.
+
+# Returning a model directly does not guarantee this level of security and consistency. If you inadvertently include a
+# sensitive field in your return statement, it will be sent to the client.
+
+class User(BaseModel):
+    username: str
+    email: str
+    password: str #Sensitive field you dont want to expose
+
+class PublicUser(BaseModel):
+    username: str
+    email: str
+    #No password, only public fields
+
+users = [User(username="john_doe", email="john@example.com", password="secret")]
+
+
+@app.get("/user", response_model=PublicUser) #Once the return statement is executed, FastAPI will model it to the PublicUser
+def get_user():
+    return users[0] #It returns a full model that includes a password
+
+# Activity: Try removing the 'PublicUser' and see what happens
