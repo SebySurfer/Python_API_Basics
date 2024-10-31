@@ -74,15 +74,16 @@ def read_task(task_id: UUID):
 def update_task(task_id: UUID, newTask: Task):
     for index, task in enumerate(tasksList):
         if task.id == task_id:
-            tasksList[index] = newTask
+            updated_task = task.copy(update=newTask.dict(exclude_unset=True))
+            tasksList[index] = updated_task
             return tasksList
     raise HTTPException(status_code=404, detail="Task not updated cuz not found stuped")
 
 # Delete
 @app.delete("/tasks/{task_id}", response_model=Task)
 def delete_task(task_id: UUID):
-    for task in tasksList:
+    for index, task in enumerate(tasksList):
         if task.id == task_id:
-            tasksList.remove(task)
+            tasksList.pop(index)
             return tasksList
     raise HTTPException(status_code=404, detail="Task not deleted cuz not found stuped")
