@@ -28,6 +28,7 @@
     # Validate different requests
     # Ensure the correct data is provided
 
+# Run app: uvicorn API_Basics:app --reload
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field #Field allows you to add metadata and customize how fields in your Pydantic models behave
@@ -71,9 +72,9 @@ def read_task(task_id: UUID):
 # Update
 @app.put("/tasks/{task_id}", response_model=Task)
 def update_task(task_id: UUID, newTask: Task):
-    for task in tasksList:
+    for index, task in enumerate(tasksList):
         if task.id == task_id:
-            task = newTask
+            tasksList[index] = newTask
             return tasksList
     raise HTTPException(status_code=404, detail="Task not updated cuz not found stuped")
 
