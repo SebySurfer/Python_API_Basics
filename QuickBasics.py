@@ -12,7 +12,7 @@ app = FastAPI()
 # Note: This is handling HTTP requests
 
 # Example with routes:
-# We'll need different routes to ad or view the to-do items on the list
+# We'll need different routes to add or view the to-do items on the list
 
 
 #Our to-do items list:
@@ -35,6 +35,7 @@ def create_item(item: str): #Create a method (by default is async) of any name t
 # curl -X GET http://127.0.0.1:8000/myPostPath/INTEGER
 @app.get("/myPostPath/{an_item_id}") #Based on the same path to access your list, which is just a best practice (not necessary), then add another path to specify a variable to use for the method
 def get_item(an_item_id: int) -> str: #Really the 'an_item_id' or using 'id' is just a conventional way to name it (good practice). You can also name it 'Var', or whatever you like
+                                    #We do "->" an arrow to tell the function that it expects a string, a basic rule of thumb of functions in python
     item = itemsList[an_item_id]
     return item
 

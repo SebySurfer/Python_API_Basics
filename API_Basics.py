@@ -32,13 +32,13 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field #Field allows you to add metadata and customize how fields in your Pydantic models behave
-from typing import List, Optional #Optional allows for it to be
+from typing import List, Optional #Optional means that you dont have to pass in the value when you create the mdodel
 from uuid import UUID, uuid4  # Stands for "Unique identifier", where it always guarantees a unique ID
 
 app = FastAPI()
 
 
-# This class will represent the objects that we'll be pasing around this API
+# This class will represent the objects that we'll be passing around this API
 class Task(BaseModel):
     id: UUID = Field(default_factory=uuid4)  # Generates a new UUID for each instance
     title: str
